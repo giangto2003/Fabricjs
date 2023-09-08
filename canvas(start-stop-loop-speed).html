@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Animation canvas</title>
+  <script src="fabric.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+
+<body>
+  <div style="margin: 10px;" class="container d-flex justify-content-center">
+    <button style="margin-right: 10px;" class="btn btn-secondary" id="start">Start</button>
+    <button style="margin-left: 10px;" class="btn btn-secondary" id="stop">Stop</button>
+    <button style="margin-left: 10px;" class="btn btn-secondary" id="">Speed</button>
+    <button style="margin-left: 10px;" class="btn btn-secondary" id="">Slow</button>
+  </div>
+  <canvas class="container" id="canvas" width="1000" height="1000"></canvas>
+
+  <script type="text/javascript">
+    var canvas = new fabric.Canvas('canvas');
+    fabric.loadSVGFromURL('default.svg', function (objects, options) {
+      var svgObject = fabric.util.groupSVGElements(objects, options);
+      // svgObject.scale(2);
+      canvas.add(svgObject);
+      // console.log(svgObject.getObjects());
+
+      var groupMat = svgObject.getObjects()[7];//mặt
+      var groupEyes1 = svgObject.getObjects()[8];//long-trang
+      var groupEyes2 = svgObject.getObjects()[9];//long-nau
+      var groupEyes3 = svgObject.getObjects()[10];//long-den
+      var groupEyes4 = svgObject.getObjects()[11];//vanh-sang
+      var groupEyes5 = svgObject.getObjects()[12];//long-mi
+      var groupEyes6 = svgObject.getObjects()[13];//quang-tham
+      var groupEyes7 = svgObject.getObjects()[14];//bong-trang
+      var groupEyes8 = svgObject.getObjects()[15];//long-may
+      var groupEyes9 = svgObject.getObjects()[17];
+      var groupEyes10 = svgObject.getObjects()[18];
+      var groupEyes11 = svgObject.getObjects()[19];
+      var groupEyes12 = svgObject.getObjects()[20];
+      var groupEyes13 = svgObject.getObjects()[21];
+      var groupEyes14 = svgObject.getObjects()[22];
+      var groupEyes15 = svgObject.getObjects()[23];
+      var groupEyes16 = svgObject.getObjects()[24];
+      var groupMui = svgObject.getObjects()[26];//mui
+      var groupMouse1 = svgObject.getObjects()[38];//phan-nau-cua-moi
+
+      var bboxMui = groupMui.getBoundingRect();
+      var centerXmui = bboxMui.left + bboxMui.width / 2;
+      var centerYmui = bboxMui.top + bboxMui.height / 2;
+      groupMui.set({
+        originX: 'center',
+        originY: 'center',
+        left: centerXmui,
+        top: centerYmui
+      });
+
+
+      var bboxMat = groupMat.getBoundingRect();
+      var centerX = bboxMat.left + bboxMat.width / 2;
+      var centerY = bboxMat.top + bboxMat.height / 2;
+      groupMat.set({
+        originX: 'center',
+        originY: 'center',
+        left: centerX,
+        top: centerY
+      });
+
+      var bboxGroupMouse1 = groupMouse1.getBoundingRect();
+      var centerXgroupMouse1 = bboxGroupMouse1.left + bboxGroupMouse1.width / 2;
+      var centerYgroupMouse1 = bboxGroupMouse1.top + bboxGroupMouse1.height / 2;
+      groupMouse1.set({
+        originX: 'center',
+        originY: 'center',
+        left: centerXgroupMouse1,
+        top: centerYgroupMouse1
+      })
+
+
+      var bboxGroupEyes1 = groupEyes1.getBoundingRect();
+      var centerXgroupEyes1 = bboxGroupEyes1.left + bboxGroupEyes1.width / 2;
+      var centerYgroupEyes1 = bboxGroupEyes1.top + bboxGroupEyes1.height / 2;
+      groupEyes1.set({
+        originX: 'center',
+        originY: 'center',
+        left: centerXgroupEyes1,
+        top: centerYgroupEyes1
+      })
+      var scaleY = 1; // Giá trị ban đầu của thuộc tính scaleY
+      var direction1 = 1; // Hướng mặc định là 1 (xuôi)
+      var direction2 = 1;
+      var direction3 = 1;
+      var direction4 = 1;
+      var isAnimating = false; // Trạng thái animation
+
+      document.getElementById('start').addEventListener('click', function () {
+        startAnimation();
+      });
+
+      document.getElementById('stop').addEventListener('click', function () {
+        stopAnimation();
+      });
+
+      function startAnimation() {
+        if (!isAnimating) {
+          isAnimating = true; // Đánh dấu animation đang chạy
+          animateGroupEyes();
+          animateGroupMouse();
+          animateGroupMat();
+          animateGroupMui();
+        }
+      }
+
+      function animateGroupMui() {
+        var scaleYTarget = direction4 === 1 ? 1.5 : 1;
+        groupMui.animate('scaleX', scaleYTarget, {
+          onChange: canvas.renderAll.bind(canvas),
+          duration: 1000,
+          easing: fabric.util.ease.easeInOutQuart,
+          onComplete: function () {
+            direction4 *= -1;
+            if (isAnimating) {
+              animateGroupMui();
+            }
+          }
+        });
+      }
+
+      function animateGroupMat() {
+        var scaleYTarget = direction3 === 1 ? 0.9 : 1;
+        groupMat.animate('scaleX', scaleYTarget, {
+          onChange: canvas.renderAll.bind(canvas),
+          duration: 1000,
+          easing: fabric.util.ease.easeInOutQuart,
+          onComplete: function () {
+            direction3 *= -1;
+            if (isAnimating) {
+              animateGroupMat();
+            }
+          }
+        });
+      }
+
+      function animateGroupMouse() {
+        var scaleYTarget = direction2 === 1 ? 0.09 : 1;
+        groupMouse1.animate('scaleY', scaleYTarget, {
+          onChange: canvas.renderAll.bind(canvas),
+          duration: 1000,
+          easing: fabric.util.ease.easeInOutQuart,
+          onComplete: function () {
+            direction2 *= -1;
+            if (isAnimating) {
+              animateGroupMouse();
+            }
+          }
+        });
+      }
+
+      function animateGroupEyes() {
+        var scaleYTarget = direction1 === 1 ? 0.09 : 1; // Xác định giá trị kết thúc của thuộc tính scaleY
+        groupEyes1.animate('scaleY', scaleYTarget, {
+          onChange: canvas.renderAll.bind(canvas),
+          duration: 1000,
+          easing: fabric.util.ease.easeInOutQuart,
+          onComplete: function () {
+            direction1 *= -1; // Đảo ngược hướng animate
+            if (isAnimating) {
+              animateGroupEyes(); // Gọi lại animateGroupEyes() để tạo vòng lặp
+            }
+          }
+        });
+      }
+      function stopAnimation() {
+        isAnimating = false; // Đánh dấu animation đã dừng
+      }
+
+    })
+  </script>
+</body>
+
+</html>
